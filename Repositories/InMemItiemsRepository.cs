@@ -3,8 +3,10 @@
 namespace Catalog.Repositories;
 
 
-public class InMemItiemsRepository
+public class InMemItiemsRepository : IItemsRepository
 {
+
+
     //List of Item
     List<Item> items = new List<Item>()
     {

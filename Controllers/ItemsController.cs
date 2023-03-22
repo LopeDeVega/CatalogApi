@@ -10,12 +10,12 @@ namespace Catalog.Controllers;
 [Route("item")]
 public class ItemsController : ControllerBase
 {
-    private readonly InMemItiemsRepository repository;
+    private readonly IItemsRepository repository;
 
     //Contructor
-    public ItemsController()
+    public ItemsController(IItemsRepository repository)
     {
-        repository = new InMemItiemsRepository();
+        this.repository = repository;
     }
 
     //Http verb // atribute
