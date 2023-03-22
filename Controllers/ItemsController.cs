@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Catalog.Repositories;
 using Catalog.Entities;
+using Catalog.Dtos;
 
 namespace Catalog.Controllers;
 
@@ -21,15 +22,15 @@ public class ItemsController : ControllerBase
     //Http verb // atribute
     [HttpGet]
     // Get a list of items stored stored the InMeItiemsRepository
-    public IEnumerable<Item> GetItems()
+    public IEnumerable<ItemDto> GetItems()
     {
-        var item = repository.GetItems();
+        var item = repository.GetItems().Select(item => item.AsDto());
         return item;
     }
 
     //ActonResult allow to return more than one thing
     [HttpGet("{id}")]
-    public ActionResult<Item> GetItem(Guid id)
+    public ActionResult<ItemDto> GetItem(Guid id)
     {
         var item = repository.GetItem(id);
 
@@ -39,7 +40,7 @@ public class ItemsController : ControllerBase
             return NotFound();
         }
 
-        return item;
+        return item.AsDto();
     }
 
 
