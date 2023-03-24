@@ -8,27 +8,43 @@ public class InMemItiemsRepository : IItemsRepository
 
 
     //List of Item
-    List<Item> items = new List<Item>()
+    List<Item> itemsList = new List<Item>()
     {
         new Item { Id = Guid.NewGuid(), Name = "Potion", Price = 9, CreateDate = DateTimeOffset.UtcNow },
         new Item { Id = Guid.NewGuid(), Name = "Iron Sword", Price = 20, CreateDate = DateTimeOffset.UtcNow },
         new Item { Id = Guid.NewGuid(), Name = "Bronze Shield", Price = 18, CreateDate = DateTimeOffset.UtcNow }
     };
 
-    // Get method to retrive an items
+    // Retrive all the items
     public IEnumerable<Item> GetItems()
     {
-        return items;
+        return itemsList;
     }
-
+    // Retrive an specifict item
     public Item GetItem(Guid id)
     {
-        if (string.IsNullOrEmpty(items.ToString()))
+        if (string.IsNullOrEmpty(itemsList.ToString()))
         {
             Console.WriteLine("The Item is null");
         }
 
-        return items.Where(item => item.Id == id).SingleOrDefault();
+        return itemsList.Where(item => item.Id == id).SingleOrDefault();
+    }
+    // Enter new data or item
+    public void CreateItem(Item newItem)
+    {
+        itemsList.Add(newItem);
     }
 
+    public void UpdateItem(Item item)
+    {
+        // finding the index of the item it is going to be updated
+        var index = itemsList.FindIndex(existingItem => existingItem.Id == item.Id);
+        itemsList[index] = item;
+    }
+
+    public void DeleteItem(Item removeItem) 
+    {
+        itemsList.Remove(removeItem);
+    }
 }
