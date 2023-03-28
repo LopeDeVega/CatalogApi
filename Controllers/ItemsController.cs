@@ -8,7 +8,7 @@ namespace Catalog.Controllers;
 
 // ControllerBase turn the class into a contraller-class (inheriting all the necessary tools)
 [ApiController]
-[Route("item")]
+[Route("items")]
 public class ItemsController : ControllerBase
 {
     private readonly IItemsRepository repository;
@@ -87,6 +87,7 @@ public class ItemsController : ControllerBase
         return NoContent();
     }
 
+    //Delete / item/ {id}
     [HttpDelete("{id}")]
     public ActionResult<ItemDto> DeleteItem(Guid id)
     {
@@ -97,7 +98,7 @@ public class ItemsController : ControllerBase
 
         var removeItem = repository.GetItem(id);
 
-        repository.DeleteItem(removeItem);
+        repository.DeleteItem(id);
 
         return CreatedAtAction(nameof(GetItem), new { id = removeItem }, removeItem.AsDto());
         

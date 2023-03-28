@@ -43,8 +43,10 @@ public class InMemItiemsRepository : IItemsRepository
         itemsList[index] = item;
     }
 
-    public void DeleteItem(Item removeItem) 
+    public void DeleteItem(Guid id) 
     {
-        itemsList.Remove(removeItem);
+        var index = itemsList.FindIndex(existingItem => existingItem.Id == id);
+        
+        itemsList.RemoveAt(index);
     }
 }

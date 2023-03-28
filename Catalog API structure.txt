@@ -1,0 +1,39 @@
+
+
+		Folders: 
+		1)	Entities --> Define the Model of the API (such id, name, age, date etc...)
+		
+		2)	Repository --> Class define a db model hard code it.
+			
+		3)	Dependency injection: 
+					Create an interface of InMemItemsRepository  == IitemsRespository
+					Instanciate the interface into the controller class and using it via constructor
+					Dependency injection must be declare in the Startup class
+						
+			
+		4)	DTO (data transfer object) --> it is a object that defines how the data will be sent over the network
+									   --> It provides a efficient way to separete domain objects from the presentation layer.
+											so the presentation layer can be changed without affecting the existing domain layer and vice versa.
+											
+		5)	Create a class called (Extension) that contains extension methods: 
+				These extension methods allow to render the data from the DTO classes instead of Items 
+			
+		6)	CreateItemDto: To create new item to send to the client same data are auto-genereated so it not need to be send the client or player the game 
+					Id and Data time data will not be included // No need to be generated the server will be do that
+					
+		7)  Data Anotation to prevent null data for fields are requiered such as [Required or even Range for price to set a valid range of prices]
+		
+		8) 	Using Postman
+		
+		9) New Repository into Repository Folder (to use a Db instead of using hardcode Dbs)
+			9.1) Db -- We are going to use MongoDb 
+					   Needed: MongoDb Client --> it is component from mongoDb clients //
+											  --> Used to interact with mongoDb
+											  --> Important !!! After creating the Reference for Db and collection via constructor
+																the Db and the collection will be created the first time it's needed.	
+		10) Using Docker for MongoDb
+				sintax: >> docker run -d --rm --name mongo -p 27017:27017
+						   docker run distached --rm (close the image when the browser is closed)
+						   name >> name of the image:  mongo
+						   -p >> opening a port in that case 27017
+					
