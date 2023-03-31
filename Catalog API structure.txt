@@ -25,6 +25,8 @@
 		
 		8) 	Using Postman
 		
+		--------------------------------------------------------- Setting a Db (Mongo) ----------------------------------------------------------------
+		
 		9) New Repository into Repository Folder (to use a Db instead of using hardcode Dbs)
 			9.1) Db -- We are going to use MongoDb 
 					   Needed: MongoDb Client --> it is component from mongoDb clients //
@@ -32,8 +34,43 @@
 											  --> Important !!! After creating the Reference for Db and collection via constructor
 																the Db and the collection will be created the first time it's needed.	
 		10) Using Docker for MongoDb
-				sintax: >> docker run -d --rm --name mongo -p 27017:27017
+				sintax: >> docker run -d --rm --name mongo -p 27017:27017  -v mongodbdata mongo
 						   docker run distached --rm (close the image when the browser is closed)
-						   name >> name of the image:  mongo
+						   name >> name of the contanier:  mongo
 						   -p >> opening a port in that case 27017
+						   -v >> a voluem --> keeps the data when you stop the docker containers
+									mongodbdata --> name of the voluem
+									mongodata:  --> /data/db  dir where mongo store data in the container
+						mongo >> name of the image
+						
+						docker ps to display the docker images and containers i have
+		
+		11) appsetting.json: Configuration to point the MongoDb and insert data 
+		
+		12) Setting: it's a new folder // MongoDbSetting (class)
+						it store the mongoDb settings such as declering the port and the Host
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 					

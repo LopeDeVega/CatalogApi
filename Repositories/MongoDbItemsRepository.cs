@@ -18,13 +18,17 @@ namespace Catalog.Repositories
 
         // Construrtor to inject MongoDb (instance of MongoDb client)
         public MongoDbItemsRepository(IMongoClient mongoClient ) 
-        { 
-        
+        {
+            // Reference of the Db
+            IMongoDatabase database = mongoClient.GetDatabase(databaseName);
+            
+            // Reference of the collection
+            itemsCollection = database.GetCollection<Item>(collectionName);
         }
 
         public void CreateItem(Item item)
         {
-            throw new NotImplementedException();
+            itemsCollection.InsertOne(item);
         }
 
         public void DeleteItem(Guid id)
