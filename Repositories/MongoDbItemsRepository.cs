@@ -1,4 +1,5 @@
 ﻿using Catalog.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Catalog.Repositories
@@ -15,6 +16,10 @@ namespace Catalog.Repositories
 
         // Declaring a collection // Item is the type of entities
         private readonly IMongoCollection<Item> itemsCollection;
+
+        // FilterDefinitionBuilder -- To filter or return an specific item
+        private readonly FilterDefinitionBuilder<Item> filterBuilder = Builders<Item>.Filter;
+
 
         // Construrtor to inject MongoDb (instance of MongoDb client)
         public MongoDbItemsRepository(IMongoClient mongoClient ) 
@@ -38,17 +43,20 @@ namespace Catalog.Repositories
 
         public Item GetItem(Guid id)
         {
-            throw new NotImplementedException();
+            // Build the filter
+            var filter = filterBuilder.Eq(item => item.Id, id);
+            return itemsCollection.Find(filter).SingleOrDefault(); 
         }
 
         public IEnumerable<Item> GetItems()
         {
-            throw new NotImplementedException();
+            return itemsCollection.Find(new BsonDocument()).ToList();
         }
 
         public void UpdateItem(Item item)
         {
-            throw new NotImplementedException();
+            var filter = filterBuilder.Eq(existingItem => existingItem.Id, item.Id);
+            itemsCollection.ReplaceOne(filter, item);
         }
     }
 }
