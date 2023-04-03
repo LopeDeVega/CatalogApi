@@ -101,7 +101,6 @@ public class ItemsController : ControllerBase
         repository.DeleteItem(id);
 
         return CreatedAtAction(nameof(GetItem), new { id = removeItem }, removeItem.AsDto());
-        
 
     } 
 
