@@ -22,17 +22,17 @@ public class ItemsController : ControllerBase
     //Http verb // atribute
     [HttpGet]
     // Get a list of items stored stored the InMeItiemsRepository
-    public IEnumerable<ItemDto> GetItems()
+    public async Task<IEnumerable<ItemDto>> GetItemsAsync()
     {
-        var item = repository.GetItems().Select(item => item.AsDto());
+        var item = (await repository.GetItemsAsync()).Select(item => item.AsDto());
         return item;
     }
 
     //ActonResult allow to return more than one thing
     [HttpGet("{id}")]
-    public ActionResult<ItemDto> GetItem(Guid id)
+    public async Task<ActionResult<ItemDto>> GetItemAsync(Guid id)
     {
-        var item = repository.GetItem(id);
+        var item = await  repository.GetItemAsync(id);
 
         //Return a status code when the item is not found
         if (item == null)
@@ -45,7 +45,7 @@ public class ItemsController : ControllerBase
 
     //Post / items
     [HttpPost]
-    public ActionResult<ItemDto> CreateItem(CreateItemDto itemDto)
+    public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItemDto itemDto)
     {
         // Creating a new itme
         Item newItem = new Item
@@ -57,22 +57,22 @@ public class ItemsController : ControllerBase
         };
 
         // Sending the new item to the repository
-        repository.CreateItem(newItem);
+        await repository.CreateItemAsync(newItem);
 
-        return CreatedAtAction(nameof(GetItem), new { id = newItem.Id }, newItem.AsDto());
+        return CreatedAtAction(nameof(GetItemAsync), new { id = newItem.Id }, newItem.AsDto());
     }
 
     //Needed the Guid id for the item and also the new name and price so updateItemDto data
     // Put/items/id
     [HttpPut("{id}")]
-    public ActionResult<ItemDto> UpdateItem(Guid id, UpdateItemDto updateItemDto)
+    public async Task<ActionResult<ItemDto>> UpdateItemAsync(Guid id, UpdateItemDto updateItemDto)
     {
         //Get the item to update
-        var existingItem = repository.GetItem(id);
+        var existingItem = await repository.GetItemAsync(id);
 
         if (existingItem is null)
         {
-            return NotFound(nameof(GetItem));
+            return NotFound(nameof(GetItemAsync));
         }
 
         //with expression (copy of the item modifing the data needed)
@@ -82,25 +82,25 @@ public class ItemsController : ControllerBase
             Price = updateItemDto.Price
         };
 
-        repository.UpdateItem(updateitem);
+        await repository.UpdateItemAsync(updateitem);
 
         return NoContent();
     }
 
     //Delete / item/ {id}
     [HttpDelete("{id}")]
-    public ActionResult<ItemDto> DeleteItem(Guid id)
+    public async Task<ActionResult<ItemDto>> DeleteItemAsync(Guid id)
     {
         if(string.IsNullOrEmpty(id.ToString()))
         { 
             return NotFound(); 
         }
 
-        var removeItem = repository.GetItem(id);
+        var removeItem = await repository.GetItemAsync(id);
 
-        repository.DeleteItem(id);
+        await repository.DeleteItemAsync(id);
 
-        return CreatedAtAction(nameof(GetItem), new { id = removeItem }, removeItem.AsDto());
+        return CreatedAtAction(nameof(GetItemAsync), new { id = removeItem }, removeItem.AsDto());
 
     } 
 

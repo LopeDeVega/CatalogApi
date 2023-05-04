@@ -16,37 +16,47 @@ public class InMemItiemsRepository : IItemsRepository
     };
 
     // Retrive all the items
-    public IEnumerable<Item> GetItems()
+    public async Task<IEnumerable<Item>> GetItemsAsync()
     {
-        return itemsList;
+        return await Task.FromResult(itemsList);
     }
     // Retrive an specifict item
-    public Item GetItem(Guid id)
+    public async Task<Item> GetItemAsync(Guid id)
     {
         if (string.IsNullOrEmpty(itemsList.ToString()))
         {
             Console.WriteLine("The Item is null");
         }
 
-        return itemsList.Where(item => item.Id == id).SingleOrDefault();
+        var item = itemsList.Where(item => item.Id == id).SingleOrDefault();
+        return await Task.FromResult(item);
     }
     // Enter new data or item
-    public void CreateItem(Item newItem)
+    public async Task CreateItemAsync(Item newItem)
     {
         itemsList.Add(newItem);
+
+        // Because there is nothing to return then we create a Task and return that when it's completed
+        await Task.CompletedTask;
     }
 
-    public void UpdateItem(Item item)
+    public async Task UpdateItemAsync(Item item)
     {
         // finding the index of the item it is going to be updated
         var index = itemsList.FindIndex(existingItem => existingItem.Id == item.Id);
         itemsList[index] = item;
+
+        // Because there is nothing to return then we create a Task and return that when it's completed
+        await Task.CompletedTask;
+
     }
 
-    public void DeleteItem(Guid id) 
+    public async Task DeleteItemAsync(Guid id) 
     {
         var index = itemsList.FindIndex(existingItem => existingItem.Id == id);
-        
         itemsList.RemoveAt(index);
+        
+        // Because there is nothing to return then we create a Task and return that when it's completed
+        await Task.CompletedTask;
     }
 }

@@ -4,15 +4,18 @@ namespace Catalog.Repositories
 {
     public interface IItemsRepository
     {
+        // Method return Task to be async methods.
+        // Void Methods turn in Task methods
+
         // Two methods to display data using Get Http verb
-        Item GetItem(Guid id);
-        IEnumerable<Item> GetItems();
+        Task<Item> GetItemAsync(Guid id);
+        Task<IEnumerable<Item>> GetItemsAsync();
         // To enter new data using post Http verb
-        void CreateItem(Item item);
-
-        void UpdateItem(Item item);
-
-        void DeleteItem(Guid id);
+        Task CreateItemAsync(Item item);
+        // Asyn -- stand for asynchronous method
+        Task UpdateItemAsync(Item item);
+       
+        Task DeleteItemAsync(Guid id);
 
     }
 }
