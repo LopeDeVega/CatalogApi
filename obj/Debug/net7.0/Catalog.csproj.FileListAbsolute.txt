@@ -44,3 +44,4 @@ Z:\APIs\Catalog\bin\Debug\net7.0\ZstdSharp.dll
 Z:\APIs\Catalog\bin\Debug\net7.0\runtimes\linux\native\libmongocrypt.so
 Z:\APIs\Catalog\bin\Debug\net7.0\runtimes\osx\native\libmongocrypt.dylib
 Z:\APIs\Catalog\bin\Debug\net7.0\runtimes\win\native\mongocrypt.dll
+Z:\APIs\Catalog\bin\Debug\net7.0\HealthChecks.MongoDb.dll

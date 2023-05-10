@@ -34,7 +34,8 @@
 											  --> Important !!! After creating the Reference for Db and collection via constructor
 																the Db and the collection will be created the first time it's needed.	
 		10) Using Docker for MongoDb
-				sintax: >> docker run -d --rm --name mongo -p 27017:27017  -v mongodbdata mongo
+				sintax: >> docker run -d --rm --name mongo -p 27017:27017  -v mongodbdata mongo 
+		New using Username and password >> docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=Asterix1 mongo
 						   docker run distached --rm (close the image when the browser is closed)
 						   name >> name of the contanier:  mongo
 						   -p >> opening a port in that case 27017
@@ -49,6 +50,38 @@
 		
 		12) Setting: it's a new folder // MongoDbSetting (class)
 						it store the mongoDb settings such as declering the port and the Host
+
+		13) Turning the API into a Asynchronous API 
+				Remember to add into the Program ==> AddControler (SuppressAsyncSuffixInActionNames)
+					it doesn't remove the sufix from the method names so post controler will work.
+
+		14) Store and use secrets via .Net Secret Manager
+		    And use health checks to repor the health of the rest API and its dependencies.	
+			
+			A) Secrets management	
+				Adding Authentication	--> via using Secret Manger to store the password
+				Based on this project --> Delete the mongo volume where the Mongo container corrently storing the data
+							    --> It allows to start a new container with a bran new Docker volume with authentication will be enabled. 
+				check container it's running --> docker ps
+				stop conatiner 		     --> docker stop (container name (mongo for this one))
+				find out the volume 	     --> docker volume ls
+				delete a volume		     --> docker volume rm (name of it (mongodbdata) ) 
+		 -- New line to start the container
+			docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=Asterix1 mongo
+		
+			B) New volume working then --> adding into  appsetings.json user-configuration
+						Password --> Using .NET Secret Manager 
+								 Console command will add an <UserSecretId> into Catalog.csproj
+								 Then dotnet user-secrets set MongoDbSetting:Password (Password name)
+	
+			C) To read (User-name and password )--> Into MongoDbSettings.cs file add two more properties one for User and another one for password
+
+
+		15) Health Checks --> Helath check endpoint --> to obtain info about API or Db are ok or there is an issue.
+				Adding into Programm.cs  couples of lines for it and the in postman (https://localhost:7288/health)  
+						builder.Services.AddHealthChecks(); // app.MapHealthChecks("/health");
+ 				Adding a package from command console a dotnet package to check the connection health with MongoDb
+				
 		
 		
 		
