@@ -58,7 +58,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//It will avoid to re-direct from http to htpps
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+
+}
 
 app.UseAuthorization();
 
@@ -88,7 +93,7 @@ app.MapHealthChecks("/health/ready",
 
             //Format the response
             context.Response.ContentType = MediaTypeNames.Application.Json;
-            //Wirte the response
+            //Write the response
             await context.Response.WriteAsync( result );
         }
     });

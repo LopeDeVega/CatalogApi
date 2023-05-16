@@ -81,6 +81,32 @@
 				Adding into Programm.cs  couples of lines for it and the in postman (https://localhost:7288/health)  
 						builder.Services.AddHealthChecks(); // app.MapHealthChecks("/health");
  				Adding a package from command console a dotnet package to check the connection health with MongoDb
+
+		--------------------------------------------------------- Setting Docker ----------------------------------------------------------------
+
+		16) Docker --> Creating a IMAGE base on the app 
+			     --> docker build -t catalog:v1 . --> Command to build the container 
+				   catalog (name of the image) v1 (a tag) . (current directory)
+
+		      A)--> Create a network to run 2 container needed for the API 
+					--> the app container 
+					--> mongo db container
+				--> Command to create the network -->docker network create catalogtutorial
+					--> catalogtutorial == network name
+					--> docker netwrok ls (to see the network)
+
+			B) docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=Asterix1 --network=catalogtutorial mongo
+				--> new comand that add the network create catalogtutorial (mongo == name of the db image)
+
+			C) Final commnad to run the containers and the network
+				-->docker run -it --rm -p 8080:80 -e MongoDbSettings:Host=mongo -e MongoDbSettings:Password=Asterix1 --network=catalogtutorial catalog:v1
+						--> it (keep the console connected)
+						--> -p ports
+						--> -e to declarea variable (this variables will override the ones from appsetting.json)
+							-e override the host MongoDbSettings:Host=mongo and password
+						--> --network == name of the network, the image (catalog) and the tag (v1)
+	
+
 				
 		
 		
