@@ -1,0 +1,135 @@
+
+
+		Folders: 
+		1)	Entities --> Define the Model of the API (such id, name, age, date etc...)
+		
+		2)	Repository --> Class define a db model hard code it.
+			
+		3)	Dependency injection: 
+					Create an interface of InMemItemsRepository  == IitemsRespository
+					Instanciate the interface into the controller class and using it via constructor
+					Dependency injection must be declare in the Startup class
+						
+			
+		4)	DTO (data transfer object) --> it is a object that defines how the data will be sent over the network
+									   --> It provides a efficient way to separete domain objects from the presentation layer.
+											so the presentation layer can be changed without affecting the existing domain layer and vice versa.
+											
+		5)	Create a class called (Extension) that contains extension methods: 
+				These extension methods allow to render the data from the DTO classes instead of Items 
+			
+		6)	CreateItemDto: To create new item to send to the client same data are auto-genereated so it not need to be send the client or player the game 
+					Id and Data time data will not be included // No need to be generated the server will be do that
+					
+		7)  Data Anotation to prevent null data for fields are requiered such as [Required or even Range for price to set a valid range of prices]
+		
+		8) 	Using Postman
+		
+		--------------------------------------------------------- Setting a Db (Mongo) ----------------------------------------------------------------
+		
+		9) New Repository into Repository Folder (to use a Db instead of using hardcode Dbs)
+			9.1) Db -- We are going to use MongoDb 
+					   Needed: MongoDb Client --> it is component from mongoDb clients //
+											  --> Used to interact with mongoDb
+											  --> Important !!! After creating the Reference for Db and collection via constructor
+																the Db and the collection will be created the first time it's needed.	
+		10) Using Docker for MongoDb
+				sintax: >> docker run -d --rm --name mongo -p 27017:27017  -v mongodbdata mongo 
+		New using Username and password >> docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=Asterix1 mongo
+						   docker run distached --rm (close the image when the browser is closed)
+						   name >> name of the contanier:  mongo
+						   -p >> opening a port in that case 27017
+						   -v >> a voluem --> keeps the data when you stop the docker containers
+									mongodbdata --> name of the voluem
+									mongodata:  --> /data/db  dir where mongo store data in the container
+						mongo >> name of the image
+						
+						docker ps to display the docker images and containers i have
+		
+		11) appsetting.json: Configuration to point the MongoDb and insert data 
+		
+		12) Setting: it's a new folder // MongoDbSetting (class)
+						it store the mongoDb settings such as declering the port and the Host
+
+		13) Turning the API into a Asynchronous API 
+				Remember to add into the Program ==> AddControler (SuppressAsyncSuffixInActionNames)
+					it doesn't remove the sufix from the method names so post controler will work.
+
+		14) Store and use secrets via .Net Secret Manager
+		    And use health checks to repor the health of the rest API and its dependencies.	
+			
+			A) Secrets management	
+				Adding Authentication	--> via using Secret Manger to store the password
+				Based on this project --> Delete the mongo volume where the Mongo container corrently storing the data
+							    --> It allows to start a new container with a bran new Docker volume with authentication will be enabled. 
+				check container it's running --> docker ps
+				stop conatiner 		     --> docker stop (container name (mongo for this one))
+				find out the volume 	     --> docker volume ls
+				delete a volume		     --> docker volume rm (name of it (mongodbdata) ) 
+		 -- New line to start the container
+			docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=Asterix1 mongo
+		
+			B) New volume working then --> adding into  appsetings.json user-configuration
+						Password --> Using .NET Secret Manager 
+								 Console command will add an <UserSecretId> into Catalog.Api.csproj
+								 Then dotnet user-secrets set MongoDbSetting:Password (Password name)
+	
+			C) To read (User-name and password )--> Into MongoDbSettings.cs file add two more properties one for User and another one for password
+
+
+		15) Health Checks --> Helath check endpoint --> to obtain info about API or Db are ok or there is an issue.
+				Adding into Programm.cs  couples of lines for it and the in postman (https://localhost:7288/health)  
+						builder.Services.AddHealthChecks(); // app.MapHealthChecks("/health");
+ 				Adding a package from command console a dotnet package to check the connection health with MongoDb
+
+		--------------------------------------------------------- Setting Docker ----------------------------------------------------------------
+
+		16) Docker --> Creating a IMAGE base on the app 
+			     --> docker build -t catalog:v1 . --> Command to build the container 
+				   catalog (name of the image) v1 (a tag) . (current directory)
+
+		      A)--> Create a network to run 2 container needed for the API 
+					--> the app container 
+					--> mongo db container
+				--> Command to create the network -->docker network create catalogtutorial
+					--> catalogtutorial == network name
+					--> docker netwrok ls (to see the network)
+
+			B) docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=Asterix1 --network=catalogtutorial mongo
+				--> new comand that add the network create catalogtutorial (mongo == name of the db image)
+
+			C) Final commnad to run the containers and the network
+				-->docker run -it --rm -p 8080:80 -e MongoDbSettings:Host=mongo -e MongoDbSettings:Password=Asterix1 --network=catalogtutorial catalog:v1
+						--> it (keep the console connected)
+						--> -p ports
+						--> -e to declarea variable (this variables will override the ones from appsetting.json)
+							-e override the host MongoDbSettings:Host=mongo and password
+						--> --network == name of the network, the image (catalog) and the tag (v1)
+	
+
+				
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+					
